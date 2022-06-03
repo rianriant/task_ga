@@ -1,0 +1,26 @@
+version: '2'
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  minio:
+    image: 'bitnami/minio:latest'
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    env_file:
+      - .env
+    networks:
+      - app-tier
+  app:
+    build: .
+    ports:
+      - '8000:80'
+    networks:
+      - app-tier
+    volumes:
+      - ./app:/code/app
+    env_file:
+      - .env
